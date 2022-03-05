@@ -6,7 +6,7 @@ resource "aviatrix_vpc" "dev_firenet_vpc" {
   account_name         = var.aws_account
   region               = var.aws_region
   name                 = "dev-firenet"
-  cidr                 = local.dev_transit_vpc
+  cidr                 = local.dev_firenet_vpc
   aviatrix_transit_vpc = false
   aviatrix_firenet_vpc = true
 }
@@ -31,7 +31,7 @@ resource "aviatrix_transit_gateway" "dev_fw_gw" {
   vpc_id       = aviatrix_vpc.dev_firenet_vpc.vpc_id
   vpc_reg      = var.aws_region
   gw_size      = "c5.xlarge"
-  subnet       = aviatrix_vpc.dev_transit_vpc.public_subnets[0].cidr
+  subnet       = aviatrix_vpc.dev_firenet_vpc.public_subnets[0].cidr
   #ha_subnet                = aviatrix_vpc.dev_transit_vpc.public_subnets[1].cidr
   #ha_gw_size               = "t2.micro"
   enable_hybrid_connection = true
@@ -43,6 +43,8 @@ resource "aviatrix_transit_gateway" "dev_fw_gw" {
   tags = {
     Organization = "Development"
   }
+
+  depends_on   = [aviatrix_vpc.dev_firenet_vpc]
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -54,17 +56,19 @@ resource "aviatrix_aws_tgw_vpc_attachment" "firenet_tgw_attachment" {
   security_domain_name = aviatrix_aws_tgw_security_domain.firenet_sec_domain.name
   vpc_account_name     = var.aws_account
   vpc_id               = aviatrix_vpc.dev_firenet_vpc.vpc_id
+  depends_on   = [aviatrix_transit_gateway.dev_fw_gw]
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Launch Firewall
 # ---------------------------------------------------------------------------------------------------------------------
-/* resource "aviatrix_firewall_instance" "ew_firewall_instance" {
+resource "aviatrix_firewall_instance" "dev_ew_fw_instance" {
   vpc_id            = aviatrix_vpc.dev_firenet_vpc.vpc_id
   firenet_gw_name   = aviatrix_transit_gateway.dev_fw_gw.gw_name
-  firewall_name     = "ew-fortigate-instance"
+  firewall_name     = "ew-fortigate-instance-1"
   firewall_image    = "Fortinet FortiGate Next-Generation Firewall"
-  firewall_size     = "m5.xlarge"
-  management_subnet = "10.4.0.16/28"
-  egress_subnet     = "10.4.0.32/28"
-} */
+  firewall_size     = "t2.small"
+  egress_subnet     = aviatrix_vpc.dev_firenet_vpc.subnets[1].cidr
+
+  depends_on   = [aviatrix_transit_gateway.dev_fw_gw]
+}

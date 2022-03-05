@@ -6,6 +6,7 @@ locals {
   stass_transit_vpc = "172.20.174.0/23"
   sta_transit_vpc   = "172.20.176.0/23"
   dev_transit_vpc   = "172.20.178.0/23"
+  dev_firenet_vpc   = "172.20.180.0/23"
 }
 
 variable "tgw_domains" {
