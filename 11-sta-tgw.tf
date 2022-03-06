@@ -49,10 +49,10 @@ resource "aviatrix_aws_tgw" "sta_tgw" {
 
 # Create Security Domains based on var.tgw_domains
 resource "aviatrix_aws_tgw_security_domain" "sta_default_domains" {
-  for_each = toset(var.tgw_domains)
-  name     = each.value
-  tgw_name = aviatrix_aws_tgw.sta_tgw.tgw_name
-    depends_on   = [aviatrix_aws_tgw.sta_tgw]
+  for_each   = toset(var.tgw_domains)
+  name       = each.value
+  tgw_name   = aviatrix_aws_tgw.sta_tgw.tgw_name
+  depends_on = [aviatrix_aws_tgw.sta_tgw]
 }
 
 # Create Security Domain Connections
@@ -71,5 +71,5 @@ resource "aviatrix_aws_tgw_transit_gateway_attachment" "sta_tgw_to_sta_gw_attach
   vpc_account_name     = var.aws_account
   vpc_id               = aviatrix_vpc.sta_transit_vpc.vpc_id
   transit_gateway_name = aviatrix_transit_gateway.sta_gw.gw_name
-  depends_on = [aviatrix_transit_gateway.sta_gw, aviatrix_aws_tgw.sta_tgw,aviatrix_aws_tgw_security_domain_connection.sta_default_connections]
+  depends_on           = [aviatrix_transit_gateway.sta_gw, aviatrix_aws_tgw.sta_tgw, aviatrix_aws_tgw_security_domain_connection.sta_default_connections]
 }

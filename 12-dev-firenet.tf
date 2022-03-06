@@ -46,7 +46,7 @@ resource "aviatrix_aws_tgw_vpc_attachment" "firenet_tgw_attachment" {
   security_domain_name = aviatrix_aws_tgw_security_domain.firewall_domain.name
   vpc_account_name     = var.aws_account
   vpc_id               = aviatrix_vpc.dev_firenet_vpc.vpc_id
-  depends_on           = [aviatrix_transit_gateway.dev_fw_gw,aviatrix_aws_tgw_security_domain_connection.dev_connections]
+  depends_on           = [aviatrix_transit_gateway.dev_fw_gw, aviatrix_aws_tgw_security_domain_connection.dev_connections]
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ resource "aviatrix_firewall_instance" "dev_ew_fw_instance" {
   egress_subnet   = aviatrix_vpc.dev_firenet_vpc.subnets[1].cidr
   #iam_role              = module.fortigate_bootstrap.aws_iam_role.name
   #bootstrap_bucket_name = module.fortigate_bootstrap.aws_s3_bucket.bucket
-  user_data = local.init_conf
+  user_data  = local.init_conf
   depends_on = [aviatrix_transit_gateway.dev_fw_gw]
 }
 
@@ -84,5 +84,5 @@ resource "aviatrix_firenet" "firenet" {
   egress_enabled                       = false
   keep_alive_via_lan_interface_enabled = false
   manage_firewall_instance_association = false
-  depends_on = [aviatrix_firewall_instance_association.dev_ew_fw_instance_assoc]
+  depends_on                           = [aviatrix_firewall_instance_association.dev_ew_fw_instance_assoc]
 }
