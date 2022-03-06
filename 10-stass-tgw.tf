@@ -6,7 +6,7 @@ resource "aviatrix_vpc" "stass_transit_vpc" {
   account_name         = var.aws_account
   region               = var.aws_region
   name                 = "stass-transit"
-  cidr                 = local.stass_transit_vpc
+  cidr                 = var.vpc_cidr.stass_transit_vpc
   aviatrix_transit_vpc = true
   aviatrix_firenet_vpc = false
 }
@@ -48,12 +48,15 @@ resource "aviatrix_aws_tgw" "stass_tgw" {
   tgw_name                          = "stass-tgw"
 }
 
+# Create Security Domains based on var.tgw_domains
 resource "aviatrix_aws_tgw_security_domain" "stass_default_domains" {
   for_each = toset(var.tgw_domains)
   name     = each.value
   tgw_name = aviatrix_aws_tgw.stass_tgw.tgw_name
+  depends_on   = [aviatrix_aws_tgw.stass_tgw]
 }
 
+# Create Security Domain Connections
 resource "aviatrix_aws_tgw_security_domain_connection" "stass_default_connections" {
   for_each     = local.connections_map
   tgw_name     = aviatrix_aws_tgw.stass_tgw.tgw_name
@@ -69,6 +72,5 @@ resource "aviatrix_aws_tgw_transit_gateway_attachment" "stass_tgw_to_stass_gw_at
   vpc_account_name     = var.aws_account
   vpc_id               = aviatrix_vpc.stass_transit_vpc.vpc_id
   transit_gateway_name = aviatrix_transit_gateway.stass_gw.gw_name
-
-  depends_on = [aviatrix_transit_gateway.stass_gw, aviatrix_aws_tgw.stass_tgw]
+  depends_on = [aviatrix_transit_gateway.stass_gw, aviatrix_aws_tgw.stass_tgw, aviatrix_aws_tgw_security_domain_connection.stass_default_connections]
 }

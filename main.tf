@@ -22,7 +22,7 @@ terraform {
 # Private Key & EC2 Key Pair
 # ---------------------------------------------------------------------------------------------------------------------
 
-resource "tls_private_key" "stass_key" {
+/* resource "tls_private_key" "stass_key" {
   algorithm = "RSA"
 }
 
@@ -40,4 +40,4 @@ resource "aws_key_pair" "instance_key_pair" {
   lifecycle {
     ignore_changes = [tags]
   }
-}
+} */

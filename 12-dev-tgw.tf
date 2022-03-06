@@ -6,7 +6,7 @@ resource "aviatrix_vpc" "dev_transit_vpc" {
   account_name         = var.aws_account
   region               = var.aws_region
   name                 = "dev-transit"
-  cidr                 = local.dev_transit_vpc
+  cidr                 = var.vpc_cidr.dev_transit_vpc
   aviatrix_transit_vpc = true
   aviatrix_firenet_vpc = false
 }
@@ -47,18 +47,29 @@ resource "aviatrix_aws_tgw" "dev_tgw" {
   tgw_name                          = "dev-tgw"
 }
 
+# Create Security Domains based on var.tgw_domains
 resource "aviatrix_aws_tgw_security_domain" "dev_default_domains" {
   for_each = toset(var.tgw_domains)
   name     = each.value
   tgw_name = aviatrix_aws_tgw.dev_tgw.tgw_name
+    depends_on        = [aviatrix_aws_tgw.dev_tgw]
 }
 
-resource "aviatrix_aws_tgw_security_domain_connection" "dev_default_connections" {
-  for_each     = local.connections_map
+# Create Firewall Security Domain
+resource "aviatrix_aws_tgw_security_domain" "firewall_domain" {
+  name              = "Firewall"
+  tgw_name          = aviatrix_aws_tgw.dev_tgw.tgw_name
+  aviatrix_firewall = true
+  depends_on        = [aviatrix_aws_tgw_security_domain.dev_default_domains]
+}
+
+# Create Security Domain Connections
+resource "aviatrix_aws_tgw_security_domain_connection" "dev_connections" {
+  for_each     = local.fw_connections_map
   tgw_name     = aviatrix_aws_tgw.dev_tgw.tgw_name
   domain_name1 = each.value.domain1
   domain_name2 = each.value.domain2
-  depends_on   = [aviatrix_aws_tgw_security_domain.dev_default_domains]
+  depends_on   = [aviatrix_aws_tgw_security_domain.dev_default_domains, aviatrix_aws_tgw_security_domain.firewall_domain]
 }
 
 # dev-tgw to dev-gw attachment
@@ -68,6 +79,5 @@ resource "aviatrix_aws_tgw_transit_gateway_attachment" "dev_tgw_to_dev_gw_attach
   vpc_account_name     = var.aws_account
   vpc_id               = aviatrix_vpc.dev_transit_vpc.vpc_id
   transit_gateway_name = aviatrix_transit_gateway.dev_gw.gw_name
-
-  depends_on = [aviatrix_transit_gateway.dev_gw, aviatrix_aws_tgw.dev_tgw]
+  depends_on = [aviatrix_transit_gateway.dev_gw, aviatrix_aws_tgw.dev_tgw,aviatrix_aws_tgw_security_domain_connection.dev_connections]
 }
