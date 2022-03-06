@@ -44,16 +44,15 @@ variable "aws_instance_size" {
 # ---------------------------------------------------------------------------------------------------------------------
 # AWS EC2
 # ---------------------------------------------------------------------------------------------------------------------
-variable "create_ec2" {
-  type        = bool
-  default     = false
-  description = "Create EC2 instance"
-}
-
 data "aws_ami" "amazon_linux_2" {
   most_recent = true
   owners      = ["amazon"]
   name_regex  = "amzn2-ami-hvm*"
+}
+variable "create_ec2" {
+  type        = bool
+  default     = false
+  description = "Create EC2 instance"
 }
 
 variable "key_name" {
