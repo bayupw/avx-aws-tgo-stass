@@ -56,7 +56,7 @@ resource "aviatrix_aws_tgw_security_domain" "dev_default_domains" {
 }
 
 # Create Firewall Security Domain
-resource "aviatrix_aws_tgw_security_domain" "firewall_domain" {
+resource "aviatrix_aws_tgw_security_domain" "dev_firewall_domain" {
   name              = "Firewall"
   tgw_name          = aviatrix_aws_tgw.dev_tgw.tgw_name
   aviatrix_firewall = true
@@ -69,7 +69,7 @@ resource "aviatrix_aws_tgw_security_domain_connection" "dev_connections" {
   tgw_name     = aviatrix_aws_tgw.dev_tgw.tgw_name
   domain_name1 = each.value.domain1
   domain_name2 = each.value.domain2
-  depends_on   = [aviatrix_aws_tgw_security_domain.dev_default_domains, aviatrix_aws_tgw_security_domain.firewall_domain]
+  depends_on   = [aviatrix_aws_tgw_security_domain.dev_default_domains, aviatrix_aws_tgw_security_domain.dev_firewall_domain]
 }
 
 # dev-tgw to dev-gw attachment
