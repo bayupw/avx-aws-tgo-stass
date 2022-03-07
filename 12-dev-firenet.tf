@@ -40,7 +40,7 @@ resource "aviatrix_transit_gateway" "dev_fw_gw" {
 # ---------------------------------------------------------------------------------------------------------------------
 # Aviatrix Transit Firenet Gateway | dev-fw-gw
 # ---------------------------------------------------------------------------------------------------------------------
-resource "aviatrix_aws_tgw_vpc_attachment" "firenet_tgw_attachment" {
+resource "aviatrix_aws_tgw_vpc_attachment" "dev_firenet_tgw_attachment" {
   tgw_name             = aviatrix_aws_tgw.dev_tgw.tgw_name
   region               = var.aws_region
   security_domain_name = aviatrix_aws_tgw_security_domain.firewall_domain.name
