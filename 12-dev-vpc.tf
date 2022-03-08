@@ -31,7 +31,7 @@ module "dev_spoke2_vpc" {
 }
 
 # dev-transit TGW - spoke 1 attachment
-/* resource "aviatrix_aws_tgw_vpc_attachment" "dev_spoke_1_tgw_attachment" {
+resource "aviatrix_aws_tgw_vpc_attachment" "dev_spoke_1_tgw_attachment" {
   tgw_name             = aviatrix_aws_tgw.dev_tgw.tgw_name
   region               = var.aws_region
   security_domain_name = "Default_Domain"
@@ -58,4 +58,4 @@ resource "aviatrix_aws_tgw_vpc_attachment" "dev_spoke2_tgw_attachment" {
   lifecycle {
     ignore_changes = all
   }
-} */
+}
