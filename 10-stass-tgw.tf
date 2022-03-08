@@ -29,6 +29,7 @@ resource "aviatrix_transit_gateway" "stass_gw" {
   single_az_ha             = false
   local_as_number          = "65521"
   enable_active_mesh       = true
+  enable_learned_cidrs_approval = true
 
   tags = {
     Organization = "Staging Shared-Services"
