@@ -10,8 +10,8 @@ variable "vpc_cidr" {
     stass_transit_vpc = "172.20.174.0/23"
     dev_transit_vpc   = "172.20.178.0/23"
     dev_firenet_vpc   = "172.20.180.0/23"
-    dev_spoke1_vpc    = "172.18.12.0/23"
-    dev_spoke2_vpc    = "172.18.14.0/23"
+    dev_spoke1_vpc    = "172.20.12.0/23"
+    dev_spoke2_vpc    = "172.20.14.0/23"
   }
 }
 
