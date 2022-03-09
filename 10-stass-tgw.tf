@@ -24,11 +24,11 @@ resource "aviatrix_transit_gateway" "stass_gw" {
   subnet       = aviatrix_vpc.stass_transit_vpc.public_subnets[0].cidr
   #ha_subnet                = aviatrix_vpc.stass_transit_vpc.public_subnets[1].cidr
   #ha_gw_size               = "t2.micro"
-  enable_hybrid_connection = true
-  connected_transit        = true
-  single_az_ha             = false
-  local_as_number          = "65521"
-  enable_active_mesh       = true
+  enable_hybrid_connection      = true
+  connected_transit             = true
+  single_az_ha                  = false
+  local_as_number               = "65521"
+  enable_active_mesh            = true
   enable_learned_cidrs_approval = true
 
   tags = {

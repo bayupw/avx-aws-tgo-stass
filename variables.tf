@@ -5,13 +5,15 @@
 variable "vpc_cidr" {
   type = map(string)
   default = {
-    stass_transit_vpc = "172.20.174.0/23"
-    sta_transit_vpc   = "172.20.176.0/23"
-    stass_transit_vpc = "172.20.174.0/23"
-    dev_transit_vpc   = "172.20.178.0/23"
-    dev_firenet_vpc   = "172.20.180.0/23"
-    dev_spoke1_vpc    = "172.20.12.0/23"
-    dev_spoke2_vpc    = "172.20.14.0/23"
+    stass_transit_vpc = "172.22.174.0/23"
+
+    sta_transit_vpc = "172.22.176.0/23"
+
+    dev_transit_vpc    = "172.22.178.0/23"
+    dev_int_fw_vpc     = "172.22.40.0/23"
+    dev_banking_vpc    = "172.22.0.0/23"
+    dev_it_service_vpc = "172.22.38.0/23"
+
   }
 }
 
@@ -135,17 +137,17 @@ end
 config router static
     edit 1
         set dst 10.0.0.0 255.0.0.0
-        set gateway ${cidrhost(aviatrix_transit_gateway.dev_fw_gw.lan_interface_cidr, 1)}
+        set gateway ${cidrhost(aviatrix_transit_gateway.dev_int_fw_gw.lan_interface_cidr, 1)}
         set device port2
     next
     edit 2
         set dst 172.16.0.0 255.240.0.0
-        set gateway ${cidrhost(aviatrix_transit_gateway.dev_fw_gw.lan_interface_cidr, 1)}
+        set gateway ${cidrhost(aviatrix_transit_gateway.dev_int_fw_gw.lan_interface_cidr, 1)}
         set device port2
     next
     edit 3
         set dst 192.168.0.0 255.255.0.0
-        set gateway ${cidrhost(aviatrix_transit_gateway.dev_fw_gw.lan_interface_cidr, 1)}
+        set gateway ${cidrhost(aviatrix_transit_gateway.dev_int_fw_gw.lan_interface_cidr, 1)}
         set device port2
     next
 end

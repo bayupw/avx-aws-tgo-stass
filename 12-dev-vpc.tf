@@ -3,30 +3,30 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 # dev spoke vpc 1
-module "dev_spoke1_vpc" {
+module "dev_banking_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
 
-  name = "dev-spoke1"
-  cidr = var.vpc_cidr.dev_spoke1_vpc
+  name = "dev-banking"
+  cidr = var.vpc_cidr.dev_banking_vpc
 
   azs             = ["${var.aws_region}a"]
-  private_subnets = [cidrsubnet(var.vpc_cidr.dev_spoke1_vpc, 1, 1)]
-  public_subnets  = [cidrsubnet(var.vpc_cidr.dev_spoke1_vpc, 1, 0)]
+  private_subnets = [cidrsubnet(var.vpc_cidr.dev_banking_vpc, 1, 1)]
+  public_subnets  = [cidrsubnet(var.vpc_cidr.dev_banking_vpc, 1, 0)]
   enable_ipv6     = false
 }
 
 # dev spoke vpc 2
-module "dev_spoke2_vpc" {
+module "dev_it_service_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
 
-  name = "dev-spoke2"
-  cidr = var.vpc_cidr.dev_spoke2_vpc
+  name = "dev-it-service"
+  cidr = var.vpc_cidr.dev_it_service_vpc
 
   azs             = ["${var.aws_region}a"]
-  private_subnets = [cidrsubnet(var.vpc_cidr.dev_spoke2_vpc, 1, 1)]
-  public_subnets  = [cidrsubnet(var.vpc_cidr.dev_spoke2_vpc, 1, 0)]
+  private_subnets = [cidrsubnet(var.vpc_cidr.dev_it_service_vpc, 1, 1)]
+  public_subnets  = [cidrsubnet(var.vpc_cidr.dev_it_service_vpc, 1, 0)]
   enable_ipv6     = false
 }
 
@@ -36,8 +36,8 @@ resource "aviatrix_aws_tgw_vpc_attachment" "dev_spoke_1_tgw_attachment" {
   region               = var.aws_region
   security_domain_name = "Default_Domain"
   vpc_account_name     = var.aws_account
-  vpc_id               = module.dev_spoke1_vpc.vpc_id
-  depends_on           = [module.dev_spoke1_vpc, aviatrix_aws_tgw_security_domain.dev_default_domains]
+  vpc_id               = module.dev_banking_vpc.vpc_id
+  depends_on           = [module.dev_banking_vpc, aviatrix_aws_tgw_security_domain.dev_default_domains]
 
   # ignore changes to allow migration
   lifecycle {
@@ -51,8 +51,8 @@ resource "aviatrix_aws_tgw_vpc_attachment" "dev_spoke2_tgw_attachment" {
   region               = var.aws_region
   security_domain_name = "Shared_Service_Domain"
   vpc_account_name     = var.aws_account
-  vpc_id               = module.dev_spoke2_vpc.vpc_id
-  depends_on           = [module.dev_spoke2_vpc, aviatrix_aws_tgw_security_domain.dev_default_domains]
+  vpc_id               = module.dev_it_service_vpc.vpc_id
+  depends_on           = [module.dev_it_service_vpc, aviatrix_aws_tgw_security_domain.dev_default_domains]
 
   # ignore changes to allow migration
   lifecycle {
