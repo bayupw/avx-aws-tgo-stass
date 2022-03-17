@@ -97,7 +97,7 @@ resource "aviatrix_aws_tgw_vpc_attachment" "dev_firenet_tgw_attachment" {
   depends_on           = [aviatrix_transit_gateway.dev_int_fw_gw, aviatrix_aws_tgw_security_domain_connection.dev_connections, aviatrix_aws_tgw_transit_gateway_attachment.dev_tgw_to_dev_gw_attachment]
 }
 
-# ---------------------------------------------------------------------------------------------------------------------
+/* # ---------------------------------------------------------------------------------------------------------------------
 # Launch Firewall
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aviatrix_firewall_instance" "dev_int_fw_instance" {
@@ -133,4 +133,4 @@ resource "aviatrix_firenet" "dev_int_fw_firenet" {
   keep_alive_via_lan_interface_enabled = false
   manage_firewall_instance_association = false
   depends_on                           = [aviatrix_firewall_instance_association.dev_int_fw_instance_assoc]
-}
+} */
