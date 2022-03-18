@@ -11,6 +11,7 @@ variable "vpc_cidr" {
 
     dev_transit_vpc    = "172.22.178.0/23"
     dev_int_fw_vpc     = "172.22.40.0/23"
+    dev_ext_fw_vpc     = "172.22.42.0/23"
     dev_banking_vpc    = "172.22.0.0/23"
     dev_it_service_vpc = "172.22.38.0/23"
 
