@@ -79,9 +79,22 @@ variable "ingress_ip" {
 # TGW
 # ---------------------------------------------------------------------------------------------------------------------
 
-variable "tgw_domains" {
+variable "mandatory_domains" {
+  type        = list(any)
   description = "Default Domain Name"
   default     = ["Default_Domain", "Shared_Service_Domain", "Aviatrix_Edge_Domain"]
+}
+
+variable "custom_security_domains" {
+  type        = list(any)
+  description = "Custom Domain Names"
+  default     = null
+}
+
+variable "firewall_security_domains" {
+  type        = list(any)
+  description = "Firewall Domain Names"
+  default     = ["InternalFirewall", "ExternalFirewall"]
 }
 
 locals {
@@ -90,8 +103,8 @@ locals {
 
   #Create connections based on var.tgw_domains
   connections = flatten([
-    for domain in var.tgw_domains : [
-      for connected_domain in slice(var.tgw_domains, index(var.tgw_domains, domain) + 1, length(var.tgw_domains)) : {
+    for domain in var.mandatory_domains : [
+      for connected_domain in slice(var.mandatory_domains, index(var.mandatory_domains, domain) + 1, length(var.mandatory_domains)) : {
         domain1 = domain
         domain2 = connected_domain
       }
@@ -103,7 +116,7 @@ locals {
     for connection in local.connections : "${connection.domain1}:${connection.domain2}" => connection
   }
 
-  fw_domains = concat(var.tgw_domains, ["Firewall"])
+  fw_domains = concat(var.mandatory_domains, var.firewall_security_domains)
 
   #Create connections based on local.fw_domains
   fw_connections = flatten([

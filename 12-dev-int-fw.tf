@@ -1,6 +1,6 @@
 locals {
   # Dev Fortigate Firewall bootstrap config
-  dev_fw_init_conf = <<EOF
+  dev_int_fw_init_conf = <<EOF
 config system admin
     edit admin
         set password ${var.fw_admin_password}
@@ -65,7 +65,7 @@ resource "aviatrix_vpc" "dev_int_fw_vpc" {
 resource "aviatrix_transit_gateway" "dev_int_fw_gw" {
   cloud_type   = 1
   account_name = var.aws_account
-  gw_name      = "dev-fw-gw"
+  gw_name      = "dev-int-fw-gw"
   vpc_id       = aviatrix_vpc.dev_int_fw_vpc.vpc_id
   vpc_reg      = var.aws_region
   gw_size      = "c5.xlarge"
@@ -91,25 +91,31 @@ resource "aviatrix_transit_gateway" "dev_int_fw_gw" {
 resource "aviatrix_aws_tgw_vpc_attachment" "dev_firenet_tgw_attachment" {
   tgw_name             = aviatrix_aws_tgw.dev_tgw.tgw_name
   region               = var.aws_region
-  security_domain_name = aviatrix_aws_tgw_security_domain.dev_firewall_domain.name
+  security_domain_name = aviatrix_aws_tgw_security_domain.dev_firewall_domain["InternalFirewall"].name
   vpc_account_name     = var.aws_account
   vpc_id               = aviatrix_vpc.dev_int_fw_vpc.vpc_id
-  depends_on           = [aviatrix_transit_gateway.dev_int_fw_gw, aviatrix_aws_tgw_security_domain_connection.dev_connections, aviatrix_aws_tgw_transit_gateway_attachment.dev_tgw_to_dev_gw_attachment]
+  depends_on           = [aviatrix_transit_gateway.dev_int_fw_gw, aviatrix_aws_tgw_security_domain_connection.dev_default_connections, aviatrix_aws_tgw_transit_gateway_attachment.dev_tgw_to_dev_gw_attachment]
 }
 
-/* # ---------------------------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------------------
 # Launch Firewall
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aviatrix_firewall_instance" "dev_int_fw_instance" {
   vpc_id          = aviatrix_vpc.dev_int_fw_vpc.vpc_id
   firenet_gw_name = aviatrix_transit_gateway.dev_int_fw_gw.gw_name
-  firewall_name   = "dev-ew-fg-instance-1"
+  firewall_name   = "dev-int-fw-instance-1"
   firewall_image  = "Fortinet FortiGate Next-Generation Firewall"
   firewall_size   = "t2.small"
   egress_subnet   = aviatrix_vpc.dev_int_fw_vpc.subnets[1].cidr
   #iam_role              = module.fortigate_bootstrap.aws_iam_role.name
   #bootstrap_bucket_name = module.fortigate_bootstrap.aws_s3_bucket.bucket
-  user_data  = local.dev_fw_init_conf
+  #user_data  = local.dev_int_fw_init_conf
+  user_data = templatefile("${path.module}/init.conf.tmpl",
+    {
+      "fw_admin_password" = var.fw_admin_password,
+      "lan_gw_ip"         = cidrhost(aviatrix_transit_gateway.dev_int_fw_gw.lan_interface_cidr, 1)
+    }
+  )
   depends_on = [aviatrix_transit_gateway.dev_int_fw_gw]
 }
 
@@ -133,4 +139,4 @@ resource "aviatrix_firenet" "dev_int_fw_firenet" {
   keep_alive_via_lan_interface_enabled = false
   manage_firewall_instance_association = false
   depends_on                           = [aviatrix_firewall_instance_association.dev_int_fw_instance_assoc]
-} */
+}

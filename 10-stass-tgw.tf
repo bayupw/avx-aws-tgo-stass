@@ -35,7 +35,7 @@ resource "aviatrix_transit_gateway" "stass_gw" {
     Organization = "Staging Shared-Services"
   }
 }
-
+/* 
 # ---------------------------------------------------------------------------------------------------------------------
 # Aviatrix Managed AWS TGW | stass-tgw
 # ---------------------------------------------------------------------------------------------------------------------
@@ -74,4 +74,4 @@ resource "aviatrix_aws_tgw_transit_gateway_attachment" "stass_tgw_to_stass_gw_at
   vpc_id               = aviatrix_vpc.stass_transit_vpc.vpc_id
   transit_gateway_name = aviatrix_transit_gateway.stass_gw.gw_name
   depends_on           = [aviatrix_transit_gateway.stass_gw, aviatrix_aws_tgw.stass_tgw, aviatrix_aws_tgw_security_domain_connection.stass_default_connections]
-}
+} */
