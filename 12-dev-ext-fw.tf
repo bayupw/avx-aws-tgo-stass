@@ -87,7 +87,7 @@ resource "aviatrix_firewall_instance_association" "dev_ext_fw_instance_assoc" {
 resource "aviatrix_firenet" "dev_ext_fw_firenet" {
   vpc_id                               = aviatrix_firewall_instance.dev_ext_fw_instance.vpc_id
   inspection_enabled                   = true
-  egress_enabled                       = false
+  egress_enabled                       = true
   keep_alive_via_lan_interface_enabled = false
   manage_firewall_instance_association = false
   depends_on                           = [aviatrix_firewall_instance_association.dev_ext_fw_instance_assoc]
