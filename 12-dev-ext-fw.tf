@@ -43,7 +43,7 @@ resource "aviatrix_transit_gateway" "dev_ext_fw_gw" {
 resource "aviatrix_aws_tgw_vpc_attachment" "dev_ext_fw_tgw_attachment" {
   tgw_name             = aviatrix_aws_tgw.dev_tgw.tgw_name
   region               = var.aws_region
-  security_domain_name = aviatrix_aws_tgw_security_domain.dev_firewall_domain["externalFirewall"].name
+  security_domain_name = aviatrix_aws_tgw_security_domain.dev_firewall_domain["ExternalFirewall"].name
   vpc_account_name     = var.aws_account
   vpc_id               = aviatrix_vpc.dev_ext_fw_vpc.vpc_id
   depends_on           = [aviatrix_transit_gateway.dev_ext_fw_gw, aviatrix_aws_tgw_security_domain_connection.dev_default_connections, aviatrix_aws_tgw_transit_gateway_attachment.dev_tgw_to_dev_gw_attachment]
