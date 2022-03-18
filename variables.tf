@@ -70,6 +70,18 @@ variable "fw_admin_password" {
   description = "Firewall admin password"
 }
 
+variable "instance_username" {
+  type        = string
+  default     = "ec2-user"
+  description = "Instance username"
+}
+
+variable "instance_password" {
+  type        = string
+  default     = "Aviatrix123#"
+  description = "Instance password"
+}
+
 variable "ingress_ip" {
   type        = string
   default     = "0.0.0.0/0"

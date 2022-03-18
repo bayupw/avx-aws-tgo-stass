@@ -40,7 +40,7 @@ resource "aviatrix_transit_gateway" "dev_ext_fw_gw" {
 # ---------------------------------------------------------------------------------------------------------------------
 # Aviatrix Transit Firenet Gateway Attachment
 # ---------------------------------------------------------------------------------------------------------------------
-resource "aviatrix_aws_tgw_vpc_attachment" "dev_firenet_tgw_attachment" {
+resource "aviatrix_aws_tgw_vpc_attachment" "dev_ext_fw_tgw_attachment" {
   tgw_name             = aviatrix_aws_tgw.dev_tgw.tgw_name
   region               = var.aws_region
   security_domain_name = aviatrix_aws_tgw_security_domain.dev_firewall_domain["externalFirewall"].name
@@ -65,7 +65,7 @@ resource "aviatrix_firewall_instance" "dev_ext_fw_instance" {
   user_data = templatefile("${path.module}/init.conf.tmpl",
     {
       "fw_admin_password" = var.fw_admin_password,
-      "lan_gw_ip"         = cidrhost(aviatrix_transit_gateway.dev_ext_fw_gw.lan_exterface_cidr, 1)
+      "lan_gw_ip"         = cidrhost(aviatrix_transit_gateway.dev_ext_fw_gw.lan_interface_cidr, 1)
     }
   )
   depends_on = [aviatrix_transit_gateway.dev_ext_fw_gw]
@@ -77,9 +77,9 @@ resource "aviatrix_firewall_instance_association" "dev_ext_fw_instance_assoc" {
   firenet_gw_name = aviatrix_transit_gateway.dev_ext_fw_gw.gw_name
   instance_id     = aviatrix_firewall_instance.dev_ext_fw_instance.instance_id
   firewall_name   = aviatrix_firewall_instance.dev_ext_fw_instance.firewall_name
-  lan_exterface   = aviatrix_firewall_instance.dev_ext_fw_instance.lan_exterface
-  #management_exterface = aviatrix_firewall_instance.dev_ext_fw_instance.management_exterface
-  egress_exterface = aviatrix_firewall_instance.dev_ext_fw_instance.egress_exterface
+  lan_interface   = aviatrix_firewall_instance.dev_ext_fw_instance.lan_interface
+  #management_interface = aviatrix_firewall_instance.dev_ext_fw_instance.management_interface
+  egress_interface = aviatrix_firewall_instance.dev_ext_fw_instance.egress_interface
   attached         = true
 }
 
@@ -88,7 +88,7 @@ resource "aviatrix_firenet" "dev_ext_fw_firenet" {
   vpc_id                               = aviatrix_firewall_instance.dev_ext_fw_instance.vpc_id
   inspection_enabled                   = true
   egress_enabled                       = false
-  keep_alive_via_lan_exterface_enabled = false
+  keep_alive_via_lan_interface_enabled = false
   manage_firewall_instance_association = false
   depends_on                           = [aviatrix_firewall_instance_association.dev_ext_fw_instance_assoc]
 }
