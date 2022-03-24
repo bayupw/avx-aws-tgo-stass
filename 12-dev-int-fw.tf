@@ -53,7 +53,7 @@ resource "aviatrix_firewall_instance" "dev_int_fw_instance" {
   firenet_gw_name = aviatrix_transit_gateway.dev_int_fw_gw.gw_name
   firewall_name   = "stass-dev-int-fw-instance-1"
   firewall_image  = "Fortinet FortiGate Next-Generation Firewall"
-  firewall_size   = "t2.small"
+  firewall_size   = "t3.small"
   egress_subnet   = aviatrix_vpc.dev_int_fw_vpc.subnets[1].cidr
   #iam_role              = module.fortigate_bootstrap.aws_iam_role.name
   #bootstrap_bucket_name = module.fortigate_bootstrap.aws_s3_bucket.bucket

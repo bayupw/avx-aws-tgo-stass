@@ -20,7 +20,7 @@ resource "aviatrix_transit_gateway" "dev_gw" {
   gw_name      = "stass-dev-gw"
   vpc_id       = aviatrix_vpc.dev_transit_vpc.vpc_id
   vpc_reg      = var.aws_region
-  gw_size      = "t2.micro"
+  gw_size      = var.aws_instance_size
   subnet       = aviatrix_vpc.dev_transit_vpc.public_subnets[0].cidr
   #ha_subnet                = aviatrix_vpc.dev_transit_vpc.public_subnets[1].cidr
   #ha_gw_size               = "t2.micro"
