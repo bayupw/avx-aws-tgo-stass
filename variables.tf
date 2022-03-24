@@ -40,7 +40,7 @@ variable "aws_region" {
 # ---------------------------------------------------------------------------------------------------------------------
 variable "aws_instance_size" {
   type        = string
-  default     = "t2.micro" #hpe "c5.xlarge"
+  default     = "t3.micro" #hpe "c5.xlarge"
   description = "AWS gateway instance size"
 }
 
@@ -81,6 +81,13 @@ variable "instance_password" {
   default     = "Aviatrix123#"
   description = "Instance password"
 }
+
+variable "instance_size" {
+  type        = string
+  default     = "t3.micro" #hpe "c5.xlarge"
+  description = "AWS gateway instance size"
+}
+
 
 variable "ingress_ip" {
   type        = string
