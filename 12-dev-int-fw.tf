@@ -5,7 +5,7 @@ resource "aviatrix_vpc" "dev_int_fw_vpc" {
   cloud_type           = 1
   account_name         = var.aws_account
   region               = var.aws_region
-  name                 = "dev-int-fw"
+  name                 = "stass-dev-int-fw"
   cidr                 = var.vpc_cidr.dev_int_fw_vpc
   aviatrix_transit_vpc = false
   aviatrix_firenet_vpc = true
@@ -30,10 +30,6 @@ resource "aviatrix_transit_gateway" "dev_int_fw_gw" {
   enable_active_mesh       = true
   enable_firenet           = true
 
-  tags = {
-    Organization = "Development"
-  }
-
   depends_on = [aviatrix_vpc.dev_int_fw_vpc]
 }
 
@@ -55,7 +51,7 @@ resource "aviatrix_aws_tgw_vpc_attachment" "dev_firenet_tgw_attachment" {
 resource "aviatrix_firewall_instance" "dev_int_fw_instance" {
   vpc_id          = aviatrix_vpc.dev_int_fw_vpc.vpc_id
   firenet_gw_name = aviatrix_transit_gateway.dev_int_fw_gw.gw_name
-  firewall_name   = "dev-int-fw-instance-1"
+  firewall_name   = "stass-dev-int-fw-instance-1"
   firewall_image  = "Fortinet FortiGate Next-Generation Firewall"
   firewall_size   = "t2.small"
   egress_subnet   = aviatrix_vpc.dev_int_fw_vpc.subnets[1].cidr

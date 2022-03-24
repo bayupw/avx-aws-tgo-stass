@@ -4,7 +4,7 @@
 
 resource "aws_security_group" "dev_banking_instance_sg" {
   count       = var.create_ec2 ? 1 : 0
-  name        = "dev-banking/sg-instance"
+  name        = "stass-dev-banking/sg-instance"
   description = "Allow all traffic from VPCs inbound and all outbound"
   vpc_id      = module.dev_banking_vpc.vpc_id
 
@@ -21,7 +21,7 @@ resource "aws_security_group" "dev_banking_instance_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "dev-banking/sg-instance"
+    Name = "stass-dev-banking/sg-instance"
   }
 }
 
@@ -35,7 +35,7 @@ resource "aws_instance" "dev_banking_instance" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "dev-banking-instance"
+    Name = "stass-dev-banking-instance"
   }
 }
 
@@ -56,7 +56,7 @@ echo ${var.instance_username}:${var.instance_password} | sudo chpasswd
 EOF
 
   tags = {
-    Name = "dev-banking-private-instance"
+    Name = "stass-dev-banking-private-instance"
   }
 }
 
@@ -66,7 +66,7 @@ EOF
 
 resource "aws_security_group" "dev_it_service_instance_sg" {
   count       = var.create_ec2 ? 1 : 0
-  name        = "dev-spoke2/sg-instance"
+  name        = "stass-dev-spoke2/sg-instance"
   description = "Allow all traffic from VPCs inbound and all outbound"
   vpc_id      = module.dev_it_service_vpc.vpc_id
 
@@ -83,7 +83,7 @@ resource "aws_security_group" "dev_it_service_instance_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "dev-it-service/sg-instance"
+    Name = "stass-dev-it-service/sg-instance"
   }
 }
 
@@ -97,7 +97,7 @@ resource "aws_instance" "dev_it_service_instance" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "dev-it-service-instance"
+    Name = "stass-dev-it-service-instance"
   }
 }
 
@@ -119,6 +119,6 @@ echo ${var.instance_username}:${var.instance_password} | sudo chpasswd
 EOF
 
   tags = {
-    Name = "dev-it-service-private-instance"
+    Name = "stass-dev-it-service-private-instance"
   }
 }

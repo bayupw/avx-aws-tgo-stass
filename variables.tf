@@ -31,7 +31,7 @@ variable "aws_account" {
 # ---------------------------------------------------------------------------------------------------------------------
 variable "aws_region" {
   type        = string
-  default     = "ap-southeast-2"
+  default     = "ap-east-1"
   description = "AWS region"
 }
 

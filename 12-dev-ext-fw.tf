@@ -5,7 +5,7 @@ resource "aviatrix_vpc" "dev_ext_fw_vpc" {
   cloud_type           = 1
   account_name         = var.aws_account
   region               = var.aws_region
-  name                 = "dev-ext-fw"
+  name                 = "stass-dev-ext-fw"
   cidr                 = var.vpc_cidr.dev_ext_fw_vpc
   aviatrix_transit_vpc = false
   aviatrix_firenet_vpc = true
@@ -17,7 +17,7 @@ resource "aviatrix_vpc" "dev_ext_fw_vpc" {
 resource "aviatrix_transit_gateway" "dev_ext_fw_gw" {
   cloud_type   = 1
   account_name = var.aws_account
-  gw_name      = "dev-ext-fw-gw"
+  gw_name      = "stass-dev-ext-fw-gw"
   vpc_id       = aviatrix_vpc.dev_ext_fw_vpc.vpc_id
   vpc_reg      = var.aws_region
   gw_size      = "c5.xlarge"
@@ -49,6 +49,7 @@ resource "aviatrix_aws_tgw_vpc_attachment" "dev_ext_fw_tgw_attachment" {
   depends_on           = [aviatrix_transit_gateway.dev_ext_fw_gw, aviatrix_aws_tgw_security_domain_connection.dev_default_connections, aviatrix_aws_tgw_transit_gateway_attachment.dev_tgw_to_dev_gw_attachment]
 }
 
+/* 
 # ---------------------------------------------------------------------------------------------------------------------
 # Launch Firewall
 # ---------------------------------------------------------------------------------------------------------------------
@@ -86,9 +87,9 @@ resource "aviatrix_firewall_instance_association" "dev_ext_fw_instance_assoc" {
 # Create an Aviatrix FireNet
 resource "aviatrix_firenet" "dev_ext_fw_firenet" {
   vpc_id                               = aviatrix_firewall_instance.dev_ext_fw_instance.vpc_id
-  inspection_enabled                   = true
+  inspection_enabled                   = false
   egress_enabled                       = true
   keep_alive_via_lan_interface_enabled = false
   manage_firewall_instance_association = false
   depends_on                           = [aviatrix_firewall_instance_association.dev_ext_fw_instance_assoc]
-}
+} */

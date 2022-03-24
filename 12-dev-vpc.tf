@@ -7,7 +7,7 @@ module "dev_banking_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
 
-  name = "dev-banking"
+  name = "stass-dev-banking"
   cidr = var.vpc_cidr.dev_banking_vpc
 
   azs             = ["${var.aws_region}a"]
@@ -21,7 +21,7 @@ module "dev_it_service_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
 
-  name = "dev-it-service"
+  name = "stass-dev-it-service"
   cidr = var.vpc_cidr.dev_it_service_vpc
 
   azs             = ["${var.aws_region}a"]

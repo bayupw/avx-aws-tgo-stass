@@ -5,7 +5,7 @@ resource "aviatrix_vpc" "dev_transit_vpc" {
   cloud_type           = 1
   account_name         = var.aws_account
   region               = var.aws_region
-  name                 = "dev-transit"
+  name                 = "stass-dev-transit"
   cidr                 = var.vpc_cidr.dev_transit_vpc
   aviatrix_transit_vpc = true
   aviatrix_firenet_vpc = false
@@ -17,7 +17,7 @@ resource "aviatrix_vpc" "dev_transit_vpc" {
 resource "aviatrix_transit_gateway" "dev_gw" {
   cloud_type   = 1
   account_name = var.aws_account
-  gw_name      = "dev-gw"
+  gw_name      = "stass-dev-gw"
   vpc_id       = aviatrix_vpc.dev_transit_vpc.vpc_id
   vpc_reg      = var.aws_region
   gw_size      = "t2.micro"
@@ -28,10 +28,6 @@ resource "aviatrix_transit_gateway" "dev_gw" {
   connected_transit        = true
   single_az_ha             = false
   enable_active_mesh       = true
-
-  tags = {
-    Organization = "Development"
-  }
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -44,7 +40,7 @@ resource "aviatrix_aws_tgw" "dev_tgw" {
   manage_transit_gateway_attachment = false
   manage_security_domain            = false
   region                            = var.aws_region
-  tgw_name                          = "dev-tgw"
+  tgw_name                          = "stass-dev-tgw"
 }
 
 # Create Security Domains based on var.tgw_domains
